@@ -1,5 +1,4 @@
 % Script to generate the paper's figures "ipsError" and "ipsFSR"
-% 2020.1.4添加注释
 
 close all; % 删除其句柄未隐藏的所有图窗
 
