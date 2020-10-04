@@ -2,39 +2,36 @@
 
 close all; % 删除其句柄未隐藏的所有图窗
 
-addpath('db','files','ids','ips','shelves'); % 向搜索路径中添加文件夹
-
-% For Cse method
-shelfPolys = loadShelves();
+addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
 
 % For reproducibilty in the random method
 rng('default'); % 会生成相同的随机数
 
 % Common to all methods
-mounthAmount = 15;
+mounthAmount = 2; % 第一个月，因为只有一个月会报错，所以用了两个月，两个月的数据一样
 notDetected = 100;
 monthRange = (1:mounthAmount);
 
 % Storage for 2D error
 metricRand = zeros(1, mounthAmount);
 metricProb = zeros(1, mounthAmount);
+metricNn = zeros(1, mounthAmount);
 metricKnn = zeros(1, mounthAmount);
 metricStg = zeros(1, mounthAmount);
-metricCse = zeros(1, mounthAmount);
 metricGk = zeros(1, mounthAmount);
 
 % Storage for floor detection rate
 rateRand = zeros(1, mounthAmount);
 rateProb = zeros(1, mounthAmount);
+rateNn = zeros(1, mounthAmount);
 rateKnn = zeros(1, mounthAmount);
 rateStg = zeros(1, mounthAmount);
-rateCse = zeros(1, mounthAmount);
 rateGk = zeros(1, mounthAmount);
 
 for month = monthRange
     % load current month data
-    dataTrain = loadContentSpecific('db', 1, 1, month);
-    dataTest = loadContentSpecific('db', 2, [1,2,3,4,5], month);
+    dataTrain = loadContentSpecific('db', 1, [2, 4], 1); % 用晚上的数据
+    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % 用晚上的数据
     
     % deal with not seen AP
     dataTrain.rss(dataTrain.rss==100) = -105;
@@ -54,6 +51,13 @@ for month = monthRange
     metricProb(1, month) = getMetric(errorProb);
     rateProb(1, month) = fsrP;
     
+    % Nn method estimation
+    knnValue = 1;    % Number of neighbors
+    predictionNn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
+    [errorNn,fsrK] = customError(predictionNn, dataTest.coords, 0);
+    metricNn(1, month) = getMetric(errorNn);
+    rateNn(1, month) = fsrK;
+    
     % kNN method estimation
     knnValue = 9;    % Number of neighbors
     predictionKnn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
@@ -69,14 +73,6 @@ for month = monthRange
     metricStg(month) = getMetric(errorStg);
     rateStg(1, month) = fsrS;
     
-    % Cse method estimation
-	% THIS METHOD IS NOT PROVIDED NOW
-    % margin = 4;     % margin parameter
-    % predictionCSE = cseEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, 2, margin, shelfPolys);
-    % [errorCSE,fsrC] = customError(predictionCSE, dataTest.coords, 0);
-    % metricCse(month) = getMetric(errorCSE);
-    % rateCse(1, month) = fsrC;
-    
     % Gk method estimation
     std_dB = 4; % (has almost no effect in this scenario)
     kValue = 12;
@@ -89,34 +85,19 @@ for month = monthRange
 end
 
 
-% Display figure "ipsError" and "ipsFSR"
+% Display figure "ipsError"
 figure('PaperUnits','centimeters','PaperSize',[40,20],'PaperPosition',[0 0 40 20]); hold on;
 plot(monthRange, metricRand, 'Color', [1 0 1], 'LineWidth', 2);
 plot(monthRange, metricProb, 'Color', [0 1 1], 'LineWidth', 2);
+plot(monthRange, metricNn, 'Color', [0 1 0], 'LineWidth', 2);
 plot(monthRange, metricKnn, 'Color', [1 0 0], 'LineWidth', 2);
 plot(monthRange, metricStg, 'Color', [0 0 1], 'LineWidth', 2);
-plot(monthRange, metricCse, 'Color', [0 1 0], 'LineWidth', 2);
 plot(monthRange, metricGk, 'Color', [0 0 0], 'LineWidth', 2); hold off;
-legend({'Rand','Prob','kNN','Stg', 'Cse', 'Gk'},'fontsize',16,'Location','eastoutside');
-axis([1,mounthAmount,0,12]);
+legend({'Rand','Prob','NN', 'kNN', 'Stg', 'Gk'},'fontsize',16,'Location','eastoutside');
+axis([1,mounthAmount,0,6]);
 xticks((1:1:mounthAmount));
 xlabel('month number','fontsize',16);
 ylabel('75 percentile error (m)','fontsize',16);
-grid on;
-
-% Display figure "ipsFSR"
-figure('PaperUnits','centimeters','PaperSize',[40,20],'PaperPosition',[0 0 40 20]); hold on;
-plot(monthRange, rateRand, 'Color', [1 0 1], 'LineWidth', 2);
-plot(monthRange, rateProb, 'Color', [0 1 1], 'LineWidth', 2);
-plot(monthRange, rateKnn, 'Color', [1 0 0], 'LineWidth', 2);
-plot(monthRange, rateStg, 'Color', [0 0 1], 'LineWidth', 2);
-plot(monthRange, rateCse, 'Color', [0 1 0], 'LineWidth', 2);
-plot(monthRange, rateGk, 'Color', [0 0 0], 'LineWidth', 2); hold off;
-legend({'Rand','Prob','kNN','Stg', 'Cse', 'Gk'},'fontsize',16,'Location','eastoutside');
-axis([1,mounthAmount,0.4,1]);
-xticks((1:1:mounthAmount));
-xlabel('month number','fontsize',16);
-ylabel('Rate of Floor Detection Success','fontsize',16);
 grid on;
 
 % 计算75%定位误差
