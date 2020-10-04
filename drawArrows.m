@@ -44,7 +44,7 @@ for month = monthRange
     metricRand(1, month) = getMetric(errorRandom);
     rateRand(1, month) = fsrR;
     
-    plotPoint();
+    drawPoints();
     title('Random');
     arrow(pos(:, 1:2), predictionRandom(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
@@ -56,7 +56,7 @@ for month = monthRange
     metricProb(1, month) = getMetric(errorProb);
     rateProb(1, month) = fsrP;
     
-    plotPoint();
+    drawPoints();
     title('Prob');
     arrow(pos(:, 1:2), predictionProb(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
@@ -68,7 +68,7 @@ for month = monthRange
     metricKnn(1, month) = getMetric(errorKnn);
     rateKnn(1, month) = fsrK;
     
-    plotPoint();
+    drawPoints();
     title('KNN');
     arrow(pos(:, 1:2), predictionKnn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
@@ -80,7 +80,7 @@ for month = monthRange
     metricNn(1, month) = getMetric(errorNn);
     rateNn(1, month) = fsrK;
     
-    plotPoint();
+    drawPoints();
     title('NN');
     arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
@@ -93,7 +93,7 @@ for month = monthRange
     metricStg(month) = getMetric(errorStg);
     rateStg(1, month) = fsrS;
     
-    plotPoint();
+    drawPoints();
     title('Stg');
     arrow(pos(:, 1:2), predictionStg(:, 1:2), 'Length', 5, 'BaseAngle', 20);
      
@@ -106,7 +106,7 @@ for month = monthRange
     metricGk(1, month) = getMetric(errorGk);
     rateGk(1, month) = fsrGk;
     
-    plotPoint();
+    drawPoints();
     title('Gk');
     arrow(pos(:, 1:2), predictionGk(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
