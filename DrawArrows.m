@@ -1,13 +1,13 @@
-% »­´ÓÊµ¼Êµãµ½Ô¤²âµãµÄ¼ıÍ·Í¼
+% ç”»ä»å®é™…ç‚¹åˆ°é¢„æµ‹ç‚¹çš„ç®­å¤´å›¾
 
-close all; % É¾³ıÆä¾ä±úÎ´Òş²ØµÄËùÓĞÍ¼´°
-addpath('db','files','ids','ips'); % ÏòËÑË÷Â·¾¶ÖĞÌí¼ÓÎÄ¼ş¼Ğ
+close all; % åˆ é™¤å…¶å¥æŸ„æœªéšè—çš„æ‰€æœ‰å›¾çª—
+addpath('db','files','ids','ips'); % å‘æœç´¢è·¯å¾„ä¸­æ·»åŠ æ–‡ä»¶å¤¹
 
 % For reproducibilty in the random method
-rng('default'); % »áÉú³ÉÏàÍ¬µÄËæ»úÊı
+rng('default'); % ä¼šç”Ÿæˆç›¸åŒçš„éšæœºæ•°
 
 % Common to all methods
-mounthAmount = 1; % µÚÒ»¸öÔÂ
+mounthAmount = 1; % ç¬¬ä¸€ä¸ªæœˆ
 notDetected = 100;
 monthRange = (1:mounthAmount);
 
@@ -29,14 +29,14 @@ rateGk = zeros(1, mounthAmount);
 
 for month = monthRange
     % load current month data
-    dataTrain = loadContentSpecific('db', 1, [2, 4], 1); % ÓÃÍíÉÏµÄÊı¾İ
-    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % ÓÃÍíÉÏµÄÊı¾İ
+    dataTrain = loadContentSpecific('db', 1, [2, 4], 1); % ç”¨æ™šä¸Šçš„æ•°æ®
+    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % ç”¨æ™šä¸Šçš„æ•°æ®
     
     % deal with not seen AP
     dataTrain.rss(dataTrain.rss==100) = -105;
     dataTest.rss(dataTest.rss==100) = -105;
     
-    % random location estimation tstÇóÆ½¾ù
+    % random location estimation tstæ±‚å¹³å‡
     kAmount = 1;    % Single Point
     [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
     [predictionRandom] = randomEstimation(dataTrain.rss, M, dataTrain.coords, kAmount);
@@ -48,7 +48,7 @@ for month = monthRange
     title('Random');
     arrow(pos(:, 1:2), predictionRandom(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
-    % Probabilistic method estimation tstÇóÆ½¾ù
+    % Probabilistic method estimation tstæ±‚å¹³å‡
     kValue = 1;    % Single Point
     [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
     [predictionProb] = probEstimation(dataTrain.rss, M, dataTrain.coords, kValue, floor(dataTrain.ids./100));
@@ -60,7 +60,7 @@ for month = monthRange
     title('Prob');
     arrow(pos(:, 1:2), predictionProb(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
-    % kNN method estimation tstÇóÆ½¾ù
+    % kNN method estimation tstæ±‚å¹³å‡
     knnValue = 9;    % Number of neighbors
     [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
     predictionKnn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
@@ -84,7 +84,7 @@ for month = monthRange
     title('NN');
     arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
     
-    % Stg method estimation tstÇóÆ½¾ù
+    % Stg method estimation tstæ±‚å¹³å‡
     stgValue = 3;    % AP filtering value
     kValue = 5;    % Number of neighbors
     [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
@@ -97,7 +97,7 @@ for month = monthRange
     title('Stg');
     arrow(pos(:, 1:2), predictionStg(:, 1:2), 'Length', 5, 'BaseAngle', 20);
      
-    % Gk method estimation tstÇóÆ½¾ù
+    % Gk method estimation tstæ±‚å¹³å‡
     std_dB = 4; % (has almost no effect in this scenario)
     kValue = 12;
     [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
@@ -113,7 +113,7 @@ for month = monthRange
     disp(month);
 end
 
-% ¼ÆËã75%¶¨Î»Îó²î
+% è®¡ç®—75%å®šä½è¯¯å·®
 function [metric] = getMetric(errors)
     metric = prctile(errors, 75);
 end
