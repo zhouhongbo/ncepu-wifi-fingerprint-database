@@ -1,62 +1,76 @@
 % Script to generate the paper's figures "Sample1Scatter" and "Sample6Scatter"
 % as well as data for table "rssDiffSamples".
 
+chosenAP = 3; % 选哪个AP的数据，范围[1, 10]
+
 close all;
 
-addpath('db','files','ids','ips','shelves');
+addpath('db','files','ids','ips');
 
-% Load test datasets from month 15 
-data123 = loadContentSpecific('db', 2, [1,2,3], 15);
-data4 = loadContentSpecific('db', 2, [4], 15);
-
-% Load 3rd floor, only one direction
-
-inds123 = findPointsInRage(data123.ids, 1, 24);
-inds4 = findPointsInRage(data4.ids, 1, 34);
-
-chosenAP = 7;
+% Load datasets from month 1
+dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1);
+dataTrain = loadContentSpecific('db', 1, [2, 4], 1);
 
 data = struct;
-data.rss = [data123.rss(inds123,chosenAP);data4.rss(inds4,chosenAP)];
-data.coords = [data123.coords(inds123,:);data4.coords(inds4,:)];
-data.time = [data123.time(inds123,:);data4.time(inds4,:)];
-data.ids = [data123.ids(inds123,:);data4.ids(inds4,:)];
-
+data.coords = [dataTest.coords;dataTrain.coords];
+data.time = [dataTest.time;dataTrain.time];
+data.ids = [dataTest.ids;dataTrain.ids];
+data.rss = [dataTest.rss(:,chosenAP);dataTrain.rss(:,chosenAP)];
 data.rss(data.rss==100) = nan;
 
-% Visualization
-for sNumber = [1,6]
-    inds = findSample(data.ids, sNumber);
-    
-	figure('PaperUnits','centimeters','PaperSize',[20,20],'PaperPosition',[0 0 20 20]);
-    scatter(data.coords(inds,1),data.coords(inds,2),[],data.rss(inds,:), 'filled', 'MarkerEdgeColor', 'k');
-    caxis([-110, -40]);
-    
-    xlabel('x');
-    ylabel('y');
-    cbh = colorbar;
-    ylabel(cbh, 'dBm');
-    colormap(jet);
-    axis square;
-    
-    
-    hold on;
-    nanVInd = isnan(data.rss);
-    scatter(data.coords(inds&nanVInd,1),data.coords(inds&nanVInd,2),[],data.rss(inds&nanVInd,:), 'filled', 'MarkerFaceColor', 'k');
-end
+% 2.4g频率
+ap24 = chosenAP * 2 - 1; % 选择AP编号
+data.rss = [dataTest.rss(:,ap24);dataTrain.rss(:,ap24)];
+data.rss(data.rss==100) = nan;
 
+sNumber = 10; % 选第10个样本
+inds = findSample(data.ids, sNumber);
 
-% RSS Difference for pais of consecutive sample, for table "rssDiffSamples"
-inds = findSample(data.ids, 1);
-prevRss = data.rss(inds,:);
+figure('PaperUnits','centimeters','PaperSize',[20,20],'PaperPosition',[0 0 20 20]);
+scatter(data.coords(inds,1),data.coords(inds,2),[],data.rss(inds,:), 'filled', 'MarkerEdgeColor', 'k');
+caxis([-110, -40]);
 
-rssDiff = zeros(1,5);
-for sNumber = (2:6)
-    inds = findSample(data.ids, sNumber);
-    currRss = data.rss(inds,:);
-    rssDiff(1,sNumber-1) = mean(abs(currRss-prevRss),'omitnan');
-    prevRss = currRss;
-end
+xlabel('x');
+ylabel('y');
+title(['AP', num2str(chosenAP), ' 2.4g']); % 设置标题
+cbh = colorbar;
+ylabel(cbh, 'dBm');
+colormap(jet);
 
-round(rssDiff,2)
+xlim([-2 31]);
+ylim([-1 30]);
+axis square;
+set(gca,'XDir','reverse'); %将x轴方向设置为反向(从右到左递增)
+
+hold on;
+nanVInd = isnan(data.rss);
+scatter(data.coords(inds&nanVInd,1),data.coords(inds&nanVInd,2),[],data.rss(inds&nanVInd,:), 'filled', 'MarkerFaceColor', 'k');
+
+% 5g频率
+ap5 = chosenAP * 2; % 选择AP编号
+data.rss = [dataTest.rss(:,ap5);dataTrain.rss(:,ap5)];
+data.rss(data.rss==100) = nan;
+
+sNumber = 10; % 选第10个样本
+inds = findSample(data.ids, sNumber);
+
+figure('PaperUnits','centimeters','PaperSize',[20,20],'PaperPosition',[0 0 20 20]);
+scatter(data.coords(inds,1),data.coords(inds,2),[],data.rss(inds,:), 'filled', 'MarkerEdgeColor', 'k');
+caxis([-110, -40]);
+
+xlabel('x');
+ylabel('y');
+title(['AP', num2str(chosenAP), ' 5g']);
+cbh = colorbar;
+ylabel(cbh, 'dBm');
+colormap(jet);
+
+xlim([-2 31]);
+ylim([-1 30]);
+axis square;
+set(gca,'XDir','reverse'); %将x轴方向设置为反向(从右到左递增)
+
+hold on;
+nanVInd = isnan(data.rss);
+scatter(data.coords(inds&nanVInd,1),data.coords(inds&nanVInd,2),[],data.rss(inds&nanVInd,:), 'filled', 'MarkerFaceColor', 'k');
 
