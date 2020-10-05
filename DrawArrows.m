@@ -1,5 +1,7 @@
 % 画从实际点到预测点的箭头图
 
+chosenMonth = 2;
+
 close all; % 删除其句柄未隐藏的所有图窗
 addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
 
@@ -27,91 +29,88 @@ rateNn = zeros(1, mounthAmount);
 rateStg = zeros(1, mounthAmount);
 rateGk = zeros(1, mounthAmount);
 
-for month = monthRange
-    % load current month data
-    dataTrain = loadContentSpecific('db', 1, [2, 4], 1); % 用晚上的数据
-    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % 用晚上的数据
-    
-    % deal with not seen AP
-    dataTrain.rss(dataTrain.rss==100) = -105;
-    dataTest.rss(dataTest.rss==100) = -105;
-    
-    % random location estimation tst求平均
-    kAmount = 1;    % Single Point
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    [predictionRandom] = randomEstimation(dataTrain.rss, M, dataTrain.coords, kAmount);
-    [errorRandom,fsrR] = customError(predictionRandom, pos, 0);
-    metricRand(1, month) = getMetric(errorRandom);
-    rateRand(1, month) = fsrR;
-    
-    drawPoints();
-    title('Random');
-    arrow(pos(:, 1:2), predictionRandom(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-    
-    % Probabilistic method estimation tst求平均
-    kValue = 1;    % Single Point
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    [predictionProb] = probEstimation(dataTrain.rss, M, dataTrain.coords, kValue, floor(dataTrain.ids./100));
-    [errorProb,fsrP] = customError(predictionProb, pos, 0);
-    metricProb(1, month) = getMetric(errorProb);
-    rateProb(1, month) = fsrP;
-    
-    drawPoints();
-    title('Prob');
-    arrow(pos(:, 1:2), predictionProb(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-    
-    % kNN method estimation tst求平均
-    knnValue = 9;    % Number of neighbors
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    predictionKnn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
-    [errorKnn,fsrK] = customError(predictionKnn, pos, 0);
-    metricKnn(1, month) = getMetric(errorKnn);
-    rateKnn(1, month) = fsrK;
-    
-    drawPoints();
-    title('KNN');
-    arrow(pos(:, 1:2), predictionKnn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-    
-    % Nn method estimation
-    knnValue = 1;    % Number of neighbors
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    predictionNn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
-    [errorNn,fsrK] = customError(predictionNn, pos, 0);
-    metricNn(1, month) = getMetric(errorNn);
-    rateNn(1, month) = fsrK;
-    
-    drawPoints();
-    title('NN');
-    arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-    
-    % Stg method estimation tst求平均
-    stgValue = 3;    % AP filtering value
-    kValue = 5;    % Number of neighbors
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    predictionStg = stgKNNEstimation(dataTrain.rss, M, dataTrain.coords, stgValue, kValue);
-    [errorStg,fsrS] = customError(predictionStg, pos, 0);
-    metricStg(month) = getMetric(errorStg);
-    rateStg(1, month) = fsrS;
-    
-    drawPoints();
-    title('Stg');
-    arrow(pos(:, 1:2), predictionStg(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-     
-    % Gk method estimation tst求平均
-    std_dB = 4; % (has almost no effect in this scenario)
-    kValue = 12;
-    [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-    predictionGk = gaussiankernelEstimation(dataTrain.rss, M, dataTrain.coords, std_dB, kValue);
-    [errorGk,fsrGk] = customError(predictionGk, pos, 0);
-    metricGk(1, month) = getMetric(errorGk);
-    rateGk(1, month) = fsrGk;
-    
-    drawPoints();
-    title('Gk');
-    arrow(pos(:, 1:2), predictionGk(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
-    disp(month);
-end
+% load current month data
+dataTrain = loadContentSpecific('db', 1, [2, 4], chosenMonth); % 用晚上的数据
+dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth); % 用晚上的数据
+
+% deal with not seen AP
+dataTrain.rss(dataTrain.rss==100) = -105;
+dataTest.rss(dataTest.rss==100) = -105;
+
+% random location estimation tst求平均
+kAmount = 1;    % Single Point
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+[predictionRandom] = randomEstimation(dataTrain.rss, M, dataTrain.coords, kAmount);
+[errorRandom,fsrR] = customError(predictionRandom, pos, 0);
+metricRand(1, chosenMonth) = getMetric(errorRandom);
+rateRand(1, chosenMonth) = fsrR;
+
+drawPoints();
+title('Random');
+arrow(pos(:, 1:2), predictionRandom(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% Probabilistic method estimation tst求平均
+kValue = 1;    % Single Point
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+[predictionProb] = probEstimation(dataTrain.rss, M, dataTrain.coords, kValue, floor(dataTrain.ids./100));
+[errorProb,fsrP] = customError(predictionProb, pos, 0);
+metricProb(1, chosenMonth) = getMetric(errorProb);
+rateProb(1, chosenMonth) = fsrP;
+
+drawPoints();
+title('Prob');
+arrow(pos(:, 1:2), predictionProb(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% kNN method estimation tst求平均
+knnValue = 9;    % Number of neighbors
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+predictionKnn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
+[errorKnn,fsrK] = customError(predictionKnn, pos, 0);
+metricKnn(1, chosenMonth) = getMetric(errorKnn);
+rateKnn(1, chosenMonth) = fsrK;
+
+drawPoints();
+title('KNN');
+arrow(pos(:, 1:2), predictionKnn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% Nn method estimation
+knnValue = 1;    % Number of neighbors
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+predictionNn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
+[errorNn,fsrK] = customError(predictionNn, pos, 0);
+metricNn(1, chosenMonth) = getMetric(errorNn);
+rateNn(1, chosenMonth) = fsrK;
+
+drawPoints();
+title('NN');
+arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% Stg method estimation tst求平均
+stgValue = 3;    % AP filtering value
+kValue = 5;    % Number of neighbors
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+predictionStg = stgKNNEstimation(dataTrain.rss, M, dataTrain.coords, stgValue, kValue);
+[errorStg,fsrS] = customError(predictionStg, pos, 0);
+metricStg(chosenMonth) = getMetric(errorStg);
+rateStg(1, chosenMonth) = fsrS;
+
+drawPoints();
+title('Stg');
+arrow(pos(:, 1:2), predictionStg(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% Gk method estimation tst求平均
+std_dB = 4; % (has almost no effect in this scenario)
+kValue = 12;
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+predictionGk = gaussiankernelEstimation(dataTrain.rss, M, dataTrain.coords, std_dB, kValue);
+[errorGk,fsrGk] = customError(predictionGk, pos, 0);
+metricGk(1, chosenMonth) = getMetric(errorGk);
+rateGk(1, chosenMonth) = fsrGk;
+
+drawPoints();
+title('Gk');
+arrow(pos(:, 1:2), predictionGk(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
 % 计算75%定位误差
 function [metric] = getMetric(errors)

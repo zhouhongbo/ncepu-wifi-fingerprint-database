@@ -1,5 +1,6 @@
 % Script to generate the paper's figure "Charting3rd" and "Charting5th"
 
+chosenMonth = 2;
 chosenAP = 3; % 选哪个AP的数据，范围[1, 10]
 
 close all;
@@ -9,7 +10,7 @@ ap24 = chosenAP * 2 - 1;
 ap5 = chosenAP * 2;
 barWidth = 0.25;
 
-data = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % 所有训练集
+data = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth); % 所有训练集
 data.rss(data.rss==100) = nan;
 
 % 2.4g频率

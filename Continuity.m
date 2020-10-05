@@ -1,6 +1,7 @@
 % Script to generate the paper's figures "Sample1Scatter" and "Sample6Scatter"
 % as well as data for table "rssDiffSamples".
 
+chosenMonth = 2;
 chosenAP = 3; % 选哪个AP的数据，范围[1, 10]
 
 close all;
@@ -8,8 +9,8 @@ close all;
 addpath('db','files','ids','ips');
 
 % Load datasets from month 1
-dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1);
-dataTrain = loadContentSpecific('db', 1, [2, 4], 1);
+dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth);
+dataTrain = loadContentSpecific('db', 1, [2, 4], chosenMonth);
 
 data = struct;
 data.coords = [dataTest.coords;dataTrain.coords];

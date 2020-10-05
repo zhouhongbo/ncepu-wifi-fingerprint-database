@@ -8,7 +8,7 @@ addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
 rng('default'); % 会生成相同的随机数
 
 % Common to all methods
-mounthAmount = 2; % 第一个月，因为只有一个月会报错，所以用了两个月，两个月的数据一样
+mounthAmount = 2;
 notDetected = 100;
 monthRange = (1:mounthAmount);
 
@@ -30,8 +30,8 @@ rateGk = zeros(1, mounthAmount);
 
 for month = monthRange
     % load current month data
-    dataTrain = loadContentSpecific('db', 1, [2, 4], 1); % 用晚上的数据
-    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], 1); % 用晚上的数据
+    dataTrain = loadContentSpecific('db', 1, [2, 4], month); % 用晚上的数据
+    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], month); % 用晚上的数据
     
     % deal with not seen AP
     dataTrain.rss(dataTrain.rss==100) = -105;
