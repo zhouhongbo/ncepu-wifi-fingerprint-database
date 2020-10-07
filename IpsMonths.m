@@ -1,4 +1,4 @@
-% Script to generate the paper's figures "ipsError" and "ipsFSR"
+% Script to generate the paper's figures "ipsError"
 
 close all; % 删除其句柄未隐藏的所有图窗
 
@@ -8,25 +8,25 @@ addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
 rng('default'); % 会生成相同的随机数
 
 % Common to all methods
-mounthAmount = 2;
+monthAmount = 2; % month看作week
 notDetected = 100;
-monthRange = (1:mounthAmount);
+monthRange = (1:monthAmount);
 
 % Storage for 2D error
-metricRand = zeros(1, mounthAmount);
-metricProb = zeros(1, mounthAmount);
-metricNn = zeros(1, mounthAmount);
-metricKnn = zeros(1, mounthAmount);
-metricStg = zeros(1, mounthAmount);
-metricGk = zeros(1, mounthAmount);
+metricRand = zeros(1, monthAmount);
+metricProb = zeros(1, monthAmount);
+metricNn = zeros(1, monthAmount);
+metricKnn = zeros(1, monthAmount);
+metricStg = zeros(1, monthAmount);
+metricGk = zeros(1, monthAmount);
 
 % Storage for floor detection rate
-rateRand = zeros(1, mounthAmount);
-rateProb = zeros(1, mounthAmount);
-rateNn = zeros(1, mounthAmount);
-rateKnn = zeros(1, mounthAmount);
-rateStg = zeros(1, mounthAmount);
-rateGk = zeros(1, mounthAmount);
+rateRand = zeros(1, monthAmount);
+rateProb = zeros(1, monthAmount);
+rateNn = zeros(1, monthAmount);
+rateKnn = zeros(1, monthAmount);
+rateStg = zeros(1, monthAmount);
+rateGk = zeros(1, monthAmount);
 
 for month = monthRange
     % load current month data
@@ -94,8 +94,8 @@ plot(monthRange, metricKnn, 'Color', [1 0 0], 'LineWidth', 2);
 plot(monthRange, metricStg, 'Color', [0 0 1], 'LineWidth', 2);
 plot(monthRange, metricGk, 'Color', [0 0 0], 'LineWidth', 2); hold off;
 legend({'Rand','Prob','NN', 'kNN', 'Stg', 'Gk'},'fontsize',16,'Location','eastoutside');
-axis([1,mounthAmount,0,6]);
-xticks((1:1:mounthAmount));
+axis([1,monthAmount,0,6]);
+xticks((1:1:monthAmount));
 xlabel('month number','fontsize',16);
 ylabel('75 percentile error (m)','fontsize',16);
 grid on;

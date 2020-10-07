@@ -8,6 +8,10 @@ function [data] = loadContentSpecific(dataFolder, trainOrTest, campaingNumbers, 
 % data: struct with rss, coords, time and ids field containig all loaded data
 %
 %   See also loadAllContent.
+% dataFolder: 'db'
+% trainOrTest: 1 训练集
+% campaingNumbers: [1, 2] 训练集1和训练集2
+% monthNumbers: 2 第2个月
     defs = getFileNameDefs();
     fileNames = getAllFileNames(dataFolder, defs);
     result = filterFileNames(fileNames, trainOrTest, campaingNumbers, monthNumbers, defs);
