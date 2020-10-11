@@ -3,7 +3,7 @@ function [] = plotPoint()
 
 addpath('db','files','ids','ips');
 
-% Load datasets from month 1
+% МгдиЪ§Он
 tst1 = loadContentSpecific('db', 2, 2, 1);
 tst2 = loadContentSpecific('db', 2, 4, 1);
 tst3 = loadContentSpecific('db', 2, 6, 1);

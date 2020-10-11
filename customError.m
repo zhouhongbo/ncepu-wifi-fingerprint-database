@@ -1,11 +1,15 @@
 function [e,fsr] = customError(estimationPos, actualPos, floorPenalty)
-%customError  Estimate locations for the query elements, finding the k nearest neighbors in the rss space.
-%   estimationPos and actualPos: estimated and actual positions, respectively
-%   positions: Locations associated to training rss values
-%   floorPenalty: Floor difference penalty value. A default value (5) is assumed if not supplied. For example, if for a pair of locations, the 2D distance is 3 m, the floor difference is 2, and 3 is supplied as floorPenalty, the final distance is 8.
-%
-%   See also probEstimation, stgKNNEstimation.
+%{
+计算预测位置与实际位置之间的误差
 
+Args:
+    estimationPos: 预测位置
+    actualPos: 实际位置
+
+Returns:
+    e: 误差
+    fsr: 楼层判断误差
+%}
     e = sqrt(sum((estimationPos(:,[1,2])-actualPos(:,[1,2])).^2, 2));
     if (~exist('floorPenalty', 'var'))
         floorPenalty = 5;

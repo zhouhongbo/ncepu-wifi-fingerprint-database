@@ -1,13 +1,17 @@
 function [M, S, pos] = getMeanAndStd(samples, locations, ids)
-%GETMEANANDSTD  Get the mean and standard deviations values
-%   [M, S, pos] = GETMEANANDSTD(samples, locations) get the mean M,
-%   standard deviation S computed from rss values samples associated to
-%   positions pos. pos are determined as the unique values of locations.
-%
-%   [M, S, pos] = GETMEANANDSTD(samples, locations, ids) similar to the
-%   previous signature, but pos are determined using ids, which specifies
-%   the correspondence between points and rows in samples and locations.
+%{
+获取训练集样本的均值和均方差
 
+Args:
+    samples: 训练集样本
+    positions: 训练集样本的位置
+    ids: 训练集样本的ID
+
+Returns:
+    M: 均值
+    S: 均方差
+    pos: 位置
+%}
     if (exist('ids','var'))
         [uids, ~, ic] = unique(ids, 'rows');
     else

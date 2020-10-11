@@ -1,7 +1,13 @@
 function [minIndexes] = findMaxs(fingerprint, k)
-% findMaxs  Get AP positions that correspond to the k strongest values found in fingerprint.
-%
-%   See also stgKNNEstimation.
+%{
+找到测试样本中最强k个AP的下标
+
+Args:
+    fingerprint: 一个测试样本
+    k: 最强AP的数量
+Returns:
+    minIndexes: 测试样本中最强k个AP的下标
+%}
 
     [B,~] = sort(fingerprint,'descend');
     minIndexes = false(1,length(fingerprint));

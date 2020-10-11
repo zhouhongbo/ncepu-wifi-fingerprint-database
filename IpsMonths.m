@@ -1,18 +1,17 @@
-% Script to generate the paper's figures "ipsError"
+% 生成75%定位误差图
 
 close all; % 删除其句柄未隐藏的所有图窗
 
 addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
 
-% For reproducibilty in the random method
-rng('default'); % 会生成相同的随机数
+rng('default'); % 会生成相同的随机数，使随机方法每次结果都一样
 
-% Common to all methods
-monthAmount = 2; % month看作week
+% 所有定位算法通用的变量
+monthAmount = 3; % month看作week
 notDetected = 100;
 monthRange = (1:monthAmount);
 
-% Storage for 2D error
+% 保存75%定位误差的变量
 metricRand = zeros(1, monthAmount);
 metricProb = zeros(1, monthAmount);
 metricNn = zeros(1, monthAmount);
@@ -20,7 +19,7 @@ metricKnn = zeros(1, monthAmount);
 metricStg = zeros(1, monthAmount);
 metricGk = zeros(1, monthAmount);
 
-% Storage for floor detection rate
+% 保存楼层判断成功率的变量
 rateRand = zeros(1, monthAmount);
 rateProb = zeros(1, monthAmount);
 rateNn = zeros(1, monthAmount);
@@ -29,52 +28,52 @@ rateStg = zeros(1, monthAmount);
 rateGk = zeros(1, monthAmount);
 
 for month = monthRange
-    % load current month data
+    % 加载本周数据
     dataTrain = loadContentSpecific('db', 1, [2, 4], month); % 用晚上的数据
     dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], month); % 用晚上的数据
     
-    % deal with not seen AP
+    % 处理无信号AP的数据
     dataTrain.rss(dataTrain.rss==100) = -105;
     dataTest.rss(dataTest.rss==100) = -105;
     
-    % random location estimation
-    kAmount = 1;    % Single Point
+    % 随机方法
+    kAmount = 1;    % 随机选取的RP数
     [predictionRandom] = randomEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kAmount);
     [errorRandom,fsrR] = customError(predictionRandom, dataTest.coords, 0);
     metricRand(1, month) = getMetric(errorRandom);
     rateRand(1, month) = fsrR;
     
-    % Probabilistic method estimation
-    kValue = 1;    % Single Point
+    % 基于概率的方法
+    kValue = 1;    % 选取概率最大节点的个数
     [predictionProb] = probEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kValue, floor(dataTrain.ids./100));
     [errorProb,fsrP] = customError(predictionProb, dataTest.coords, 0);
     metricProb(1, month) = getMetric(errorProb);
     rateProb(1, month) = fsrP;
     
-    % Nn method estimation
-    knnValue = 1;    % Number of neighbors
+    % NN方法
+    knnValue = 1;    % 选取的邻居节点个数
     predictionNn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
     [errorNn,fsrK] = customError(predictionNn, dataTest.coords, 0);
     metricNn(1, month) = getMetric(errorNn);
     rateNn(1, month) = fsrK;
     
-    % kNN method estimation
-    knnValue = 9;    % Number of neighbors
+    % KNN方法
+    knnValue = 9;    % 选取的邻居节点个数
     predictionKnn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
     [errorKnn,fsrK] = customError(predictionKnn, dataTest.coords, 0);
     metricKnn(1, month) = getMetric(errorKnn);
     rateKnn(1, month) = fsrK;
     
-    % Stg method estimation
-    stgValue = 3;    % AP filtering value
-    kValue = 5;    % Number of neighbors
+    % Stg方法
+    stgValue = 3;    % 信号最强AP的个数
+    kValue = 5;    % 选取的邻居节点个数
     predictionStg = stgKNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, stgValue, kValue);
     [errorStg,fsrS] = customError(predictionStg, dataTest.coords, 0);
     metricStg(month) = getMetric(errorStg);
     rateStg(1, month) = fsrS;
     
-    % Gk method estimation
-    std_dB = 4; % (has almost no effect in this scenario)
+    % Gk方法
+    std_dB = 4; % 本次计算几乎没有影响
     kValue = 12;
     predictionGk = gaussiankernelEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, std_dB, kValue);
     [errorGk,fsrGk] = customError(predictionGk, dataTest.coords, 0);
@@ -85,7 +84,7 @@ for month = monthRange
 end
 
 
-% Display figure "ipsError"
+% 绘制定位误差对比图
 figure('PaperUnits','centimeters','PaperSize',[40,20],'PaperPosition',[0 0 40 20]); hold on;
 plot(monthRange, metricRand, 'Color', [1 0 1], 'LineWidth', 2);
 plot(monthRange, metricProb, 'Color', [0 1 1], 'LineWidth', 2);
