@@ -1,5 +1,5 @@
 % 将所有的点显示出来
-function [] = plotPoint()
+function [] = drawPoints()
 
 addpath('db','files','ids','ips');
 
