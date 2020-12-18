@@ -1,5 +1,4 @@
-% Script to generate the paper's figures "Sample1Scatter" and "Sample6Scatter"
-% as well as data for table "rssDiffSamples".
+% 绘制2.4g和5g信号的空间分布图
 
 chosenMonth = 2;
 chosenAP = 3; % 选哪个AP的数据，范围[1, 10]
