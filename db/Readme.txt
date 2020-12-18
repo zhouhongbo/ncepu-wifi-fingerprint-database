@@ -1,5 +1,5 @@
-* Each subfolder contains the measurements of each dataset that belongs to a collection month.
-* Each dataset is represented by four files: the RSS, the time, the coordinates, and the identifiers files, so that the ith row of each of them holds the respective information of the ith fingerprint of the dataset.
-* Each column in the RSS file represents intesity measurement values (dBm) for a specific wireless access point. If the access point was not detected for a fingerprint, its intensity value is 100 in that fingerprint.
-* The naming convention for representing a dataset is 'dddnnttt.csv', where ddd is either 'trn' (training) or 'tst' (test), nn is two a two digit number (e.g., '01'), and ttt is the dataset' information contained in the file, which can be 'rss' for a RSS information file, 'crd' for coordinates file, 'tms' for the time file, and 'ids' for the identifiers file.
-* Most of samples were collected using a Samsung Galaxy S3 smartphone. Only files corresponding to training 2 and tests 6-10 from month 25 were collected using a Samsung Galaxy A5 (2017) smartphone.
+* 每个子文件夹包含了一周采集的数据。
+* 每个数据集由4个文件表示：RSS、时间戳、位置坐标和样本ID文件。
+* 数据集的命名规则是“dddnnttt.csv”，“ddd”是"trn"(train)或"tst"(test)，“nn”是数据集的编号(例"01")，“ttt”是数据的类型("rss"：WiFi指纹数据, "crd"：坐标数据, "tms"：时间戳, "ids"：样本ID)
+
+“95”文件夹与“05”文件夹的区别是，“95”文件夹里的数据采集方向与“05”相反
