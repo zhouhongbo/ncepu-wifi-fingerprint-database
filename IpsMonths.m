@@ -1,4 +1,4 @@
-% 生成75%定位误差图
+% 对每周的数据分别使用所有的定位算法，计算75%定位误差并生成定位误差对比图
 
 close all; % 删除其句柄未隐藏的所有图窗
 
@@ -36,14 +36,14 @@ for month = monthRange
     dataTrain.rss(dataTrain.rss==100) = -105;
     dataTest.rss(dataTest.rss==100) = -105;
     
-    % 随机方法
+    % Rand方法
     kAmount = 1;    % 随机选取的RP数
     [predictionRandom] = randomEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kAmount);
     [errorRandom,fsrR] = customError(predictionRandom, dataTest.coords, 0);
     metricRand(1, month) = getMetric(errorRandom);
     rateRand(1, month) = fsrR;
     
-    % 基于概率的方法
+    % Prob方法
     kValue = 1;    % 选取概率最大节点的个数
     [predictionProb] = probEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kValue, floor(dataTrain.ids./100));
     [errorProb,fsrP] = customError(predictionProb, dataTest.coords, 0);
@@ -73,7 +73,7 @@ for month = monthRange
     rateStg(1, month) = fsrS;
     
     % Gk方法
-    std_dB = 4; % 本次计算几乎没有影响
+    std_dB = 4; % 此参数影响不大
     kValue = 12;
     predictionGk = gaussiankernelEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, std_dB, kValue);
     [errorGk,fsrGk] = customError(predictionGk, dataTest.coords, 0);

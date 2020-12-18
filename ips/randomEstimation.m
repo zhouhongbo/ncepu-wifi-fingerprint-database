@@ -1,3 +1,13 @@
+% 随机方法
+% 
+% Args:
+%     samples: 训练集样本
+%     query: 测试集样本
+%     positions: 训练集样本的位置
+%     k: 随机选取的RP数
+% 
+% Returns:
+%     prediction: 预测位置 
 function [estimates] = randomEstimation(samples, query, positions, k)
     [pos, ~, ~] = unique(positions, 'rows');
     nPoints = size(pos,1);

@@ -1,4 +1,4 @@
-% 外部引入的函数，用来画带箭头的直线
+% 用来画带箭头图的函数
 function [h,yy,zz] = arrow(varargin)
 % ARROW  Draw a line with an arrowhead.
 %

@@ -1,16 +1,21 @@
+% 基于概率的方法
+% 
+% Args:
+%     samples: 训练集样本
+%     query: 测试集样本
+%     positions: 训练集样本的位置
+%     k: 最近邻个数
+%     ids: 样本的ID（需要把特征值删除），根据这个参数把具有相同特征的训练集样本分组
+% 
+% Returns:
+%     prediction: 预测位置
 function [prediction] = probEstimation(samples, query, positions, k, ids)
-%probEstimation  Estimate locations for the query elements, using the probabilistic approach.
-%   samples and query: rss values of training and test samples, respectively
-%   positions: locations associated to training rss values
-%   k: number of neighbors used to produce the estimation
-%   ids: When provided, the means and stds are computed for unique points defined by ids. Otherwise, they are computed using unique locations defined by positions.
-%   See also kNNEstimation, stgKNNEstimation.
-
     [M,S, pos] = getMeanAndStd(samples, positions, ids);
     PROBS = probs(M, S, query);
     [prediction] = estimatesKNN(PROBS, pos, k);
 end
-    
+
+% 比较概率值的KNN方法
 function [estimates] = estimatesKNN(PROBS, positions, k)
     estimates = zeros(size(PROBS,2),3);
     nRows = size(PROBS, 2);
@@ -24,7 +29,8 @@ function [estimates] = estimatesKNN(PROBS, positions, k)
         estimates(i,3) = mode(floor(I(1:k,i)));
     end
 end
-    
+
+% 计算测试集样本的每一个数据出现在对应AP的概率
 function [PROBS] = probs(M, S, query)
     nRowsT = size(M, 1);
     nRowsV = size(query, 1);
@@ -37,6 +43,7 @@ function [PROBS] = probs(M, S, query)
     end
 end
 
+% 计算PROBS变量的一列
 function [P] = probsFP(M, S, fp)
     e = 0.5;
     nRowsT = size(M,1);

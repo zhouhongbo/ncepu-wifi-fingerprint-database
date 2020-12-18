@@ -1,11 +1,15 @@
+% stg方法，是KNN方法的一种改进方法
+% 
+% Args:
+%     samples: 训练集样本
+%     query: 测试集样本
+%     positions: 训练集样本的位置
+%     stgValue: 信号最强AP的个数
+%     k: 最近邻个数
+% 
+% Returns:
+%     prediction (ndarray): 预测位置
 function [prediction] = stgKNNEstimation(samples, query, positions, stgValue, k)
-%stgKNNEstimation  Estimate locations for the query elements, first filtering samples whose strongest APs match those of the queries, and from those then finding the k nearest neighbors in the rss space.
-%   samples and query: rss values of training and test samples, respectively
-%   positions: locations associated to training rss values
-%   stgValue: number of strongest AP for filtering
-%   kValue: number of neighbors
-%   See also probEstimation, kNNEstimation.
-
     % Get a cell array, which can be indexes by AP number. The cell content
     % indicates the samples for which the indexing AP was their strongest AP.
     [samplesList] = stgSmplsPerAP(samples, stgValue);

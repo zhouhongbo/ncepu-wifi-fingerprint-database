@@ -1,17 +1,15 @@
+% 获取训练集样本的均值和均方差
+% 
+% Args:
+%     samples: 训练集样本
+%     positions: 训练集样本的位置
+%     ids: 训练集样本的ID
+% 
+% Returns:
+%     M: 均值
+%     S: 均方差
+%     pos: 位置
 function [M, S, pos] = getMeanAndStd(samples, locations, ids)
-%{
-获取训练集样本的均值和均方差
-
-Args:
-    samples: 训练集样本
-    positions: 训练集样本的位置
-    ids: 训练集样本的ID
-
-Returns:
-    M: 均值
-    S: 均方差
-    pos: 位置
-%}
     if (exist('ids','var'))
         [uids, ~, ic] = unique(ids, 'rows');
     else

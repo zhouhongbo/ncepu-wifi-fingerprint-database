@@ -1,3 +1,4 @@
+% 根据month参数处理ID
 function [result] = findMonth(pointIds, month)
 % findMonth  From the list of ids pointIds, return the ids of all samples
 % that belong to datasets from the specified month.
