@@ -1,9 +1,9 @@
-% ½«ËùÓĞµÄµãÏÔÊ¾³öÀ´
+% å°†æ‰€æœ‰çš„ç‚¹æ˜¾ç¤ºå‡ºæ¥
 function [] = drawPoints()
 
 addpath('db','files','ids','ips');
 
-% ¼ÓÔØÊı¾İ
+% åŠ è½½æ•°æ®
 tst1 = loadContentSpecific('db', 2, 2, 1);
 tst2 = loadContentSpecific('db', 2, 4, 1);
 tst3 = loadContentSpecific('db', 2, 6, 1);
@@ -22,12 +22,12 @@ scatter(tst2.coords(:,1),tst2.coords(:,2), [], 'yellow', 'filled');
 hold on;
 scatter(tst3.coords(:,1),tst3.coords(:,2), [], 'black', 'filled');
 hold on;
-scatter(tst4.coords(:,1),tst4.coords(:,2), [], [0.63 0.13 0.94], 'filled'); % ×ÏÉ«
+scatter(tst4.coords(:,1),tst4.coords(:,2), [], [0.63 0.13 0.94], 'filled'); % ç´«è‰²
 hold on;
 
 xlim([-2 31]);
 ylim([-1 30]);
 axis square;
-set(gca,'XDir','reverse'); %½«xÖá·½ÏòÉèÖÃÎª·´Ïò(´ÓÓÒµ½×óµİÔö)
+set(gca,'XDir','reverse'); %å°†xè½´æ–¹å‘è®¾ç½®ä¸ºåå‘(ä»å³åˆ°å·¦é€’å¢)
 
 end

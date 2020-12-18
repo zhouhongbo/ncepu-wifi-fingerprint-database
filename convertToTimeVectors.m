@@ -1,18 +1,18 @@
 function [times] = convertToTimeVectors(timeNumbers)
 %{
-½«Ê±¼ä´Á×ª»»ÎªÄêÔÂÈÕÊ±·ÖÃëµÄĞÎÊ½
+å°†æ—¶é—´æˆ³è½¬æ¢ä¸ºå¹´æœˆæ—¥æ—¶åˆ†ç§’çš„å½¢å¼
 
 Args:
-    timeNumbers: Ê±¼ä´Á
+    timeNumbers: æ—¶é—´æˆ³
 
 Returns:
-    times:ÄêÔÂÈÕÊ±·ÖÃë
+    times:å¹´æœˆæ—¥æ—¶åˆ†ç§’
     
-Test1£º
+Test1ï¼š
     timeNumbers: 20200926142506
     times: [2020 9 26 14 25 6]
 %}
-    secs = rem(timeNumbers, 10^2); % r = rem(a,b) ·µ»Ø a ³ıÒÔ b ºóµÄÓàÊı
+    secs = rem(timeNumbers, 10^2); % r = rem(a,b) è¿”å› a é™¤ä»¥ b åçš„ä½™æ•°
     mins = rem(floor(timeNumbers./10^2), 10^2);
     hors = rem(floor(timeNumbers./10^4), 10^2);
     days = rem(floor(timeNumbers./10^6), 10^2);

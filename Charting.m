@@ -1,7 +1,7 @@
 % Script to generate the paper's figure "Charting3rd" and "Charting5th"
 
 chosenMonth = 2;
-chosenAP = 3; % Ñ¡ÄÄ¸öAPµÄÊı¾İ£¬·¶Î§[1, 10]
+chosenAP = 3; % é€‰å“ªä¸ªAPçš„æ•°æ®ï¼ŒèŒƒå›´[1, 10]
 
 close all;
 addpath('db','files','ids','ips');
@@ -10,15 +10,15 @@ ap24 = chosenAP * 2 - 1;
 ap5 = chosenAP * 2;
 barWidth = 0.25;
 
-data = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth); % ËùÓĞÑµÁ·¼¯
+data = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth); % æ‰€æœ‰è®­ç»ƒé›†
 data.rss(data.rss==100) = nan;
 
-% 2.4gÆµÂÊ
-[M, S, pos] = getMeanAndStd(data.rss(:,ap24),data.coords); % ÑéÖ¤¹ıÃ»´í
+% 2.4gé¢‘ç‡
+[M, S, pos] = getMeanAndStd(data.rss(:,ap24),data.coords); % éªŒè¯è¿‡æ²¡é”™
 drawRssBars(pos(:,1), pos(:,2), barWidth, M(:,:), S(:,:), ['AP', num2str(chosenAP), ' 2.4g']);
-set(gca,'XDir','reverse'); %½«xÖá·½ÏòÉèÖÃÎª·´Ïò(´ÓÓÒµ½×óµİÔö)
+set(gca,'XDir','reverse'); %å°†xè½´æ–¹å‘è®¾ç½®ä¸ºåå‘(ä»å³åˆ°å·¦é€’å¢)
 
-% 5gÆµÂÊ
+% 5gé¢‘ç‡
 [M, S, pos] = getMeanAndStd(data.rss(:,ap5),data.coords); % 12 samples considered per location
 drawRssBars(pos(:,1), pos(:,2), barWidth, M(:,:), S(:,:), ['AP', num2str(chosenAP), ' 5g']);
-set(gca,'XDir','reverse'); %½«xÖá·½ÏòÉèÖÃÎª·´Ïò(´ÓÓÒµ½×óµİÔö)
+set(gca,'XDir','reverse'); %å°†xè½´æ–¹å‘è®¾ç½®ä¸ºåå‘(ä»å³åˆ°å·¦é€’å¢)

@@ -1,14 +1,14 @@
 function [e,fsr] = customError(estimationPos, actualPos, floorPenalty)
 %{
-计算预测位置与实际位置之间的误差
+璁＄畻棰勬祴浣嶇疆涓庡疄闄呬綅缃箣闂寸殑璇樊
 
 Args:
-    estimationPos: 预测位置
-    actualPos: 实际位置
+    estimationPos: 棰勬祴浣嶇疆
+    actualPos: 瀹為檯浣嶇疆
 
 Returns:
-    e: 误差
-    fsr: 楼层判断误差
+    e: 璇樊
+    fsr: 妤煎眰鍒ゆ柇璇樊
 %}
     e = sqrt(sum((estimationPos(:,[1,2])-actualPos(:,[1,2])).^2, 2));
     if (~exist('floorPenalty', 'var'))

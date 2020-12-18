@@ -9,9 +9,9 @@ function [data] = loadContentSpecific(dataFolder, trainOrTest, campaingNumbers, 
 %
 %   See also loadAllContent.
 % dataFolder: 'db'
-% trainOrTest: 1 ÑµÁ·¼¯
-% campaingNumbers: [1, 2] ÑµÁ·¼¯1ºÍÑµÁ·¼¯2
-% monthNumbers: 2 µÚ2¸öÔÂ
+% trainOrTest: 1 è®­ç»ƒé›†
+% campaingNumbers: [1, 2] è®­ç»ƒé›†1å’Œè®­ç»ƒé›†2
+% monthNumbers: 2 ç¬¬2ä¸ªæœˆ
     defs = getFileNameDefs();
     fileNames = getAllFileNames(dataFolder, defs);
     result = filterFileNames(fileNames, trainOrTest, campaingNumbers, monthNumbers, defs);

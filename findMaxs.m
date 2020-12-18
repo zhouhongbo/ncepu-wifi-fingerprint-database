@@ -1,12 +1,12 @@
 function [minIndexes] = findMaxs(fingerprint, k)
 %{
-ÕÒµ½²âÊÔÑù±¾ÖĞ×îÇ¿k¸öAPµÄÏÂ±ê
+æ‰¾åˆ°æµ‹è¯•æ ·æœ¬ä¸­æœ€å¼ºkä¸ªAPçš„ä¸‹æ ‡
 
 Args:
-    fingerprint: Ò»¸ö²âÊÔÑù±¾
-    k: ×îÇ¿APµÄÊıÁ¿
+    fingerprint: ä¸€ä¸ªæµ‹è¯•æ ·æœ¬
+    k: æœ€å¼ºAPçš„æ•°é‡
 Returns:
-    minIndexes: ²âÊÔÑù±¾ÖĞ×îÇ¿k¸öAPµÄÏÂ±ê
+    minIndexes: æµ‹è¯•æ ·æœ¬ä¸­æœ€å¼ºkä¸ªAPçš„ä¸‹æ ‡
 %}
 
     [B,~] = sort(fingerprint,'descend');

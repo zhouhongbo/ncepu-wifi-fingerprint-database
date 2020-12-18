@@ -1,16 +1,16 @@
 function [M, S, pos] = getMeanAndStd(samples, locations, ids)
 %{
-»ñÈ¡ÑµÁ·¼¯Ñù±¾µÄ¾ùÖµºÍ¾ù·½²î
+è·å–è®­ç»ƒé›†æ ·æœ¬çš„å‡å€¼å’Œå‡æ–¹å·®
 
 Args:
-    samples: ÑµÁ·¼¯Ñù±¾
-    positions: ÑµÁ·¼¯Ñù±¾µÄÎ»ÖÃ
-    ids: ÑµÁ·¼¯Ñù±¾µÄID
+    samples: è®­ç»ƒé›†æ ·æœ¬
+    positions: è®­ç»ƒé›†æ ·æœ¬çš„ä½ç½®
+    ids: è®­ç»ƒé›†æ ·æœ¬çš„ID
 
 Returns:
-    M: ¾ùÖµ
-    S: ¾ù·½²î
-    pos: Î»ÖÃ
+    M: å‡å€¼
+    S: å‡æ–¹å·®
+    pos: ä½ç½®
 %}
     if (exist('ids','var'))
         [uids, ~, ic] = unique(ids, 'rows');

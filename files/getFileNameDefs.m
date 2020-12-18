@@ -1,6 +1,6 @@
 function [defs] = getFileNameDefs()
 % getFileNameDefs  Utility. Defines file naming parts of datasets.
-% defs: 与文件名相关的结构体
+% defs: 涓庢枃浠跺悕鐩稿叧鐨勭粨鏋勪綋
     defs = struct;
     defs.test = 'tst';
     defs.train = 'trn';

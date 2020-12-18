@@ -1,17 +1,17 @@
-% Éú³É75%¶¨Î»Îó²îÍ¼
+% ç”Ÿæˆ75%å®šä½è¯¯å·®å›¾
 
-close all; % É¾³ıÆä¾ä±úÎ´Òş²ØµÄËùÓĞÍ¼´°
+close all; % åˆ é™¤å…¶å¥æŸ„æœªéšè—çš„æ‰€æœ‰å›¾çª—
 
-addpath('db','files','ids','ips'); % ÏòËÑË÷Â·¾¶ÖĞÌí¼ÓÎÄ¼ş¼Ğ
+addpath('db','files','ids','ips'); % å‘æœç´¢è·¯å¾„ä¸­æ·»åŠ æ–‡ä»¶å¤¹
 
-rng('default'); % »áÉú³ÉÏàÍ¬µÄËæ»úÊı£¬Ê¹Ëæ»ú·½·¨Ã¿´Î½á¹û¶¼Ò»Ñù
+rng('default'); % ä¼šç”Ÿæˆç›¸åŒçš„éšæœºæ•°ï¼Œä½¿éšæœºæ–¹æ³•æ¯æ¬¡ç»“æœéƒ½ä¸€æ ·
 
-% ËùÓĞ¶¨Î»Ëã·¨Í¨ÓÃµÄ±äÁ¿
-monthAmount = 3; % month¿´×÷week
+% æ‰€æœ‰å®šä½ç®—æ³•é€šç”¨çš„å˜é‡
+monthAmount = 3; % monthçœ‹ä½œweek
 notDetected = 100;
 monthRange = (1:monthAmount);
 
-% ±£´æ75%¶¨Î»Îó²îµÄ±äÁ¿
+% ä¿å­˜75%å®šä½è¯¯å·®çš„å˜é‡
 metricRand = zeros(1, monthAmount);
 metricProb = zeros(1, monthAmount);
 metricNn = zeros(1, monthAmount);
@@ -19,7 +19,7 @@ metricKnn = zeros(1, monthAmount);
 metricStg = zeros(1, monthAmount);
 metricGk = zeros(1, monthAmount);
 
-% ±£´æÂ¥²ãÅĞ¶Ï³É¹¦ÂÊµÄ±äÁ¿
+% ä¿å­˜æ¥¼å±‚åˆ¤æ–­æˆåŠŸç‡çš„å˜é‡
 rateRand = zeros(1, monthAmount);
 rateProb = zeros(1, monthAmount);
 rateNn = zeros(1, monthAmount);
@@ -28,52 +28,52 @@ rateStg = zeros(1, monthAmount);
 rateGk = zeros(1, monthAmount);
 
 for month = monthRange
-    % ¼ÓÔØ±¾ÖÜÊı¾İ
-    dataTrain = loadContentSpecific('db', 1, [2, 4], month); % ÓÃÍíÉÏµÄÊı¾İ
-    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], month); % ÓÃÍíÉÏµÄÊı¾İ
+    % åŠ è½½æœ¬å‘¨æ•°æ®
+    dataTrain = loadContentSpecific('db', 1, [2, 4], month); % ç”¨æ™šä¸Šçš„æ•°æ®
+    dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], month); % ç”¨æ™šä¸Šçš„æ•°æ®
     
-    % ´¦ÀíÎŞĞÅºÅAPµÄÊı¾İ
+    % å¤„ç†æ— ä¿¡å·APçš„æ•°æ®
     dataTrain.rss(dataTrain.rss==100) = -105;
     dataTest.rss(dataTest.rss==100) = -105;
     
-    % Ëæ»ú·½·¨
-    kAmount = 1;    % Ëæ»úÑ¡È¡µÄRPÊı
+    % éšæœºæ–¹æ³•
+    kAmount = 1;    % éšæœºé€‰å–çš„RPæ•°
     [predictionRandom] = randomEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kAmount);
     [errorRandom,fsrR] = customError(predictionRandom, dataTest.coords, 0);
     metricRand(1, month) = getMetric(errorRandom);
     rateRand(1, month) = fsrR;
     
-    % »ùÓÚ¸ÅÂÊµÄ·½·¨
-    kValue = 1;    % Ñ¡È¡¸ÅÂÊ×î´ó½ÚµãµÄ¸öÊı
+    % åŸºäºæ¦‚ç‡çš„æ–¹æ³•
+    kValue = 1;    % é€‰å–æ¦‚ç‡æœ€å¤§èŠ‚ç‚¹çš„ä¸ªæ•°
     [predictionProb] = probEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kValue, floor(dataTrain.ids./100));
     [errorProb,fsrP] = customError(predictionProb, dataTest.coords, 0);
     metricProb(1, month) = getMetric(errorProb);
     rateProb(1, month) = fsrP;
     
-    % NN·½·¨
-    knnValue = 1;    % Ñ¡È¡µÄÁÚ¾Ó½Úµã¸öÊı
+    % NNæ–¹æ³•
+    knnValue = 1;    % é€‰å–çš„é‚»å±…èŠ‚ç‚¹ä¸ªæ•°
     predictionNn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
     [errorNn,fsrK] = customError(predictionNn, dataTest.coords, 0);
     metricNn(1, month) = getMetric(errorNn);
     rateNn(1, month) = fsrK;
     
-    % KNN·½·¨
-    knnValue = 9;    % Ñ¡È¡µÄÁÚ¾Ó½Úµã¸öÊı
+    % KNNæ–¹æ³•
+    knnValue = 9;    % é€‰å–çš„é‚»å±…èŠ‚ç‚¹ä¸ªæ•°
     predictionKnn = kNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, knnValue);
     [errorKnn,fsrK] = customError(predictionKnn, dataTest.coords, 0);
     metricKnn(1, month) = getMetric(errorKnn);
     rateKnn(1, month) = fsrK;
     
-    % Stg·½·¨
-    stgValue = 3;    % ĞÅºÅ×îÇ¿APµÄ¸öÊı
-    kValue = 5;    % Ñ¡È¡µÄÁÚ¾Ó½Úµã¸öÊı
+    % Stgæ–¹æ³•
+    stgValue = 3;    % ä¿¡å·æœ€å¼ºAPçš„ä¸ªæ•°
+    kValue = 5;    % é€‰å–çš„é‚»å±…èŠ‚ç‚¹ä¸ªæ•°
     predictionStg = stgKNNEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, stgValue, kValue);
     [errorStg,fsrS] = customError(predictionStg, dataTest.coords, 0);
     metricStg(month) = getMetric(errorStg);
     rateStg(1, month) = fsrS;
     
-    % Gk·½·¨
-    std_dB = 4; % ±¾´Î¼ÆËã¼¸ºõÃ»ÓĞÓ°Ïì
+    % Gkæ–¹æ³•
+    std_dB = 4; % æœ¬æ¬¡è®¡ç®—å‡ ä¹æ²¡æœ‰å½±å“
     kValue = 12;
     predictionGk = gaussiankernelEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, std_dB, kValue);
     [errorGk,fsrGk] = customError(predictionGk, dataTest.coords, 0);
@@ -84,7 +84,7 @@ for month = monthRange
 end
 
 
-% »æÖÆ¶¨Î»Îó²î¶Ô±ÈÍ¼
+% ç»˜åˆ¶å®šä½è¯¯å·®å¯¹æ¯”å›¾
 figure('PaperUnits','centimeters','PaperSize',[40,20],'PaperPosition',[0 0 40 20]); hold on;
 plot(monthRange, metricRand, 'Color', [1 0 1], 'LineWidth', 2);
 plot(monthRange, metricProb, 'Color', [0 1 1], 'LineWidth', 2);
@@ -99,7 +99,7 @@ xlabel('month number','fontsize',16);
 ylabel('75 percentile error (m)','fontsize',16);
 grid on;
 
-% ¼ÆËã75%¶¨Î»Îó²î
+% è®¡ç®—75%å®šä½è¯¯å·®
 function [metric] = getMetric(errors)
     metric = prctile(errors, 75);
 end
