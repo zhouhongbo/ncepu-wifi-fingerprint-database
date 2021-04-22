@@ -1,12 +1,9 @@
 % 画从实际点到预测点的箭头图
 
-chosenMonth = 2;
+chosenMonth = 1;
 
 close all; % 删除其句柄未隐藏的所有图窗
 addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
-
-% For reproducibilty in the random method
-rng('default'); % 会生成相同的随机数
 
 % Common to all methods
 mounthAmount = 1; % 第一个月
@@ -14,7 +11,6 @@ notDetected = 100;
 monthRange = (1:mounthAmount);
 
 % Storage for 2D error
-metricRand = zeros(1, mounthAmount);
 metricProb = zeros(1, mounthAmount);
 metricKnn = zeros(1, mounthAmount);
 metricNn = zeros(1, mounthAmount);
@@ -22,7 +18,6 @@ metricStg = zeros(1, mounthAmount);
 metricGk = zeros(1, mounthAmount);
 
 % Storage for floor detection rate
-rateRand = zeros(1, mounthAmount);
 rateProb = zeros(1, mounthAmount);
 rateKnn = zeros(1, mounthAmount);
 rateNn = zeros(1, mounthAmount);
@@ -38,17 +33,33 @@ dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], chosenMonth); % 用晚上�
 dataTrain.rss(dataTrain.rss==100) = -105;
 dataTest.rss(dataTest.rss==100) = -105;
 
-% random location estimation tst求平均
-kAmount = 1;    % Single Point
+% Nn method estimation
+knnValue = 1;    % Number of neighbors
 [M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-[predictionRandom] = randomEstimation(dataTrain.rss, M, dataTrain.coords, kAmount);
-[errorRandom,fsrR] = customError(predictionRandom, pos, 0);
-metricRand(1, chosenMonth) = getMetric(errorRandom);
-rateRand(1, chosenMonth) = fsrR;
+predictionNn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
+[errorNn,fsrK] = customError(predictionNn, pos, 0);
+metricNn(1, chosenMonth) = getMetric(errorNn);
+rateNn(1, chosenMonth) = fsrK;
 
 drawPoints();
-title('Random');
-arrow(pos(:, 1:2), predictionRandom(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+xlabel('x/m')
+ylabel('y/m')
+set(gca, 'fontsize', 10.5, 'fontname', '宋体');
+arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
+
+% kNN method estimation tst求平均
+knnValue = 5;    % Number of neighbors
+[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
+predictionKnn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
+[errorKnn,fsrK] = customError(predictionKnn, pos, 0);
+metricKnn(1, chosenMonth) = getMetric(errorKnn);
+rateKnn(1, chosenMonth) = fsrK;
+
+drawPoints();
+xlabel('x/m')
+ylabel('y/m')
+set(gca, 'fontsize', 10.5, 'fontname', '宋体');
+arrow(pos(:, 1:2), predictionKnn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
 % Probabilistic method estimation tst求平均
 kValue = 1;    % Single Point
@@ -59,32 +70,10 @@ metricProb(1, chosenMonth) = getMetric(errorProb);
 rateProb(1, chosenMonth) = fsrP;
 
 drawPoints();
-title('Prob');
+xlabel('x/m')
+ylabel('y/m')
+set(gca, 'fontsize', 10.5, 'fontname', '宋体');
 arrow(pos(:, 1:2), predictionProb(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-
-% kNN method estimation tst求平均
-knnValue = 9;    % Number of neighbors
-[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-predictionKnn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
-[errorKnn,fsrK] = customError(predictionKnn, pos, 0);
-metricKnn(1, chosenMonth) = getMetric(errorKnn);
-rateKnn(1, chosenMonth) = fsrK;
-
-drawPoints();
-title('KNN');
-arrow(pos(:, 1:2), predictionKnn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
-
-% Nn method estimation
-knnValue = 1;    % Number of neighbors
-[M, ~, pos] = getMeanAndStd(dataTest.rss, dataTest.coords);
-predictionNn = kNNEstimation(dataTrain.rss, M, dataTrain.coords, knnValue);
-[errorNn,fsrK] = customError(predictionNn, pos, 0);
-metricNn(1, chosenMonth) = getMetric(errorNn);
-rateNn(1, chosenMonth) = fsrK;
-
-drawPoints();
-title('NN');
-arrow(pos(:, 1:2), predictionNn(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
 % Stg method estimation tst求平均
 stgValue = 3;    % AP filtering value
@@ -96,7 +85,9 @@ metricStg(chosenMonth) = getMetric(errorStg);
 rateStg(1, chosenMonth) = fsrS;
 
 drawPoints();
-title('Stg');
+xlabel('x/m')
+ylabel('y/m')
+set(gca, 'fontsize', 10.5, 'fontname', '宋体');
 arrow(pos(:, 1:2), predictionStg(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
 % Gk method estimation tst求平均
@@ -109,7 +100,9 @@ metricGk(1, chosenMonth) = getMetric(errorGk);
 rateGk(1, chosenMonth) = fsrGk;
 
 drawPoints();
-title('Gk');
+xlabel('x/m')
+ylabel('y/m')
+set(gca, 'fontsize', 10.5, 'fontname', '宋体');
 arrow(pos(:, 1:2), predictionGk(:, 1:2), 'Length', 5, 'BaseAngle', 20);
 
 % 计算75%定位误差

@@ -1,5 +1,3 @@
-% 对每周的数据分别使用所有的定位算法，计算75%定位误差并生成定位误差对比图
-
 close all; % 删除其句柄未隐藏的所有图窗
 
 addpath('db','files','ids','ips'); % 向搜索路径中添加文件夹
@@ -28,9 +26,33 @@ for month = monthRange
     dataTrain = loadContentSpecific('db', 1, [2, 4], month); % 用晚上的数据
     dataTest = loadContentSpecific('db', 2, [2, 4, 6, 8], month); % 用晚上的数据
     
+    % 减少一半训练集数据
+    id = mod(dataTrain.ids, 10) >= 5;
+    dataTrain.rss(id, :) = [];
+    dataTrain.coords(id, :) = [];
+    dataTrain.time(id, :) = [];
+    dataTrain.ids(id, :) = [];
+    
     % 处理无信号AP的数据
     dataTrain.rss(dataTrain.rss==100) = -105;
     dataTest.rss(dataTest.rss==100) = -105;
+    
+    % Prob方法
+    kValue = 1;    % 选取概率最大节点的个数
+    [predictionProb] = probEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kValue, floor(dataTrain.ids./100));
+    [errorProb,fsrP] = customError(predictionProb, dataTest.coords, 0);
+    metricProb(1, month) = getMetric(errorProb);
+    rateProb(1, month) = fsrP;
+    
+    disp('Prob:')
+    disp(['平均误差：', num2str(mean(errorProb))])
+    disp(['68%概率误差：', num2str(prctile(errorProb, 68))])
+    disp(['75%概率误差：', num2str(prctile(errorProb, 75))])
+    disp(['95%概率误差：', num2str(prctile(errorProb, 95))])
+    disp(['误差标准差：', num2str(std(errorProb))])
+    disp(['1m概率：', num2str(sum(errorProb <= 1)/ size(errorProb, 1))])
+    disp(['2m概率：', num2str(sum(errorProb <= 2)/ size(errorProb, 1))])
+    disp(['3m概率：', num2str(sum(errorProb <= 3)/ size(errorProb, 1))])
     
     % NN方法
     knnValue = 1;    % 选取的邻居节点个数
@@ -65,23 +87,6 @@ for month = monthRange
     disp(['1m概率：', num2str(sum(errorKnn <= 1)/ size(errorKnn, 1))])
     disp(['2m概率：', num2str(sum(errorKnn <= 2)/ size(errorKnn, 1))])
     disp(['3m概率：', num2str(sum(errorKnn <= 3)/ size(errorKnn, 1))])
-    
-    % Prob方法
-    kValue = 1;    % 选取概率最大节点的个数
-    [predictionProb] = probEstimation(dataTrain.rss, dataTest.rss, dataTrain.coords, kValue, floor(dataTrain.ids./100));
-    [errorProb,fsrP] = customError(predictionProb, dataTest.coords, 0);
-    metricProb(1, month) = getMetric(errorProb);
-    rateProb(1, month) = fsrP;
-    
-    disp('Prob:')
-    disp(['平均误差：', num2str(mean(errorProb))])
-    disp(['68%概率误差：', num2str(prctile(errorProb, 68))])
-    disp(['75%概率误差：', num2str(prctile(errorProb, 75))])
-    disp(['95%概率误差：', num2str(prctile(errorProb, 95))])
-    disp(['误差标准差：', num2str(std(errorProb))])
-    disp(['1m概率：', num2str(sum(errorProb <= 1)/ size(errorProb, 1))])
-    disp(['2m概率：', num2str(sum(errorProb <= 2)/ size(errorProb, 1))])
-    disp(['3m概率：', num2str(sum(errorProb <= 3)/ size(errorProb, 1))])
     
     % Stg方法
     stgValue = 3;    % 信号最强AP的个数
